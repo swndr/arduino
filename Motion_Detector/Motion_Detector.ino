@@ -28,11 +28,14 @@ void loop() {
     int x = xReadings[i];
     int pX = xReadings[i-1];
     
-    if (x =- pX == 0) {
+//     Serial.println(x);
+//      Serial.println(pX);
+    
+    if (x == pX) {
       Serial.println("No Motion");
     } else {
       Serial.println("Motion");
-   
+    }
     
   }
   
