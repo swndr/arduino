@@ -1,3 +1,8 @@
+#include <Servo.h> 
+
+Servo myservo;  // create servo object to control a servo
+int servoPin = 9;
+
 int h;
 
 int sensorPinX = A0; 
@@ -14,12 +19,15 @@ int motionCounter;
 void setup() {
   
   Serial.begin(9600);
+  myservo.attach(servoPin);  // attaches the servo on pin 9 to the servo object
   	
 }
 
 void loop() {
   
   int i; // variable for iteration
+  int m; // used for moving Servo
+
   
 //  for (i = 0; i < 3600; i++) { // use for one hour
   for (i = 0; i < 30; i++) {
@@ -28,11 +36,21 @@ void loop() {
     Serial.print(i); 
     Serial.print("\t");  
     Serial.println(motionCounter);
+
+    
+    m = map(motionCounter,0,30,0,180);
+    Serial.println(m);
+    
+    myservo.write(m);
     
     if (i == 29) {
       h++;
       Serial.println(h);
+      
       motionCounter = 0;
+      
+      servoPin++;
+      myservo.attach(servoPin);
     }
 }	
 
