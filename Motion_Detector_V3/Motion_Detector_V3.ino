@@ -1,12 +1,28 @@
-#include <Servo.h> 
+#include <Servo.h>
+
+// Shift Resistor
+
+int latchPin = 5;
+int clockPin = 6;
+int dataPin = 4;
+ 
+byte leds = 0;
+
+// Servo
 
 Servo myservo;  // create servo object to control a servo
 int servoPin = 9; // set first servo to PIN 9
 
+// Acceleromator
+
 int sensorPinX = A0; // set X-acceleromator to A0
+
+// Button
 
 const int buttonPin = 2; // pin for button
 boolean buttonState; // default button state
+
+// Time
 
 long previousMillis = 0;
 long interval = 1000;
@@ -14,6 +30,8 @@ long interval = 1000;
 int s; // variable to count secs
 int h; // variable to count hours
 int hourLength = 30; // set to 3600 for full hour
+
+// Motion
 
 int xReadings[30]; // create an array for 30 secs of readings
 //int xReadings[3600]; // create an array for one hour of readings
@@ -28,7 +46,16 @@ void setup() {
   Serial.begin(9600);
   myservo.attach(servoPin);  // attaches the servo on PIN 9 to the servo object
   myservo.write(90);
+  
   pinMode(buttonPin, INPUT); // attaches button to PIN 2
+
+  pinMode(latchPin, OUTPUT); // shift resistor
+  pinMode(dataPin, OUTPUT);  // shift resistor
+  pinMode(clockPin, OUTPUT); // shift resistor
+  
+  leds = 0;
+  bitSet(leds, h);
+  updateShiftRegister();
 
 }
 
@@ -61,6 +88,9 @@ void loop() {
     Serial.print("Hours : ");
     Serial.println(h);
     
+    bitSet(leds, h);
+    updateShiftRegister();
+    
     motionCounter = 0;
 
     servoPin++;
@@ -80,9 +110,13 @@ void loop() {
        
      s = 0;
      h = 0;
+     leds = 0;
+     updateShiftRegister();
+         
      servoPin = 9;
      myservo.attach(servoPin);
      delay(5000);
+   
     }
 }
 
@@ -100,3 +134,9 @@ int hasMoved() {
   } 
 }
 
+void updateShiftRegister()
+{
+   digitalWrite(latchPin, LOW);
+   shiftOut(dataPin, clockPin, LSBFIRST, leds);
+   digitalWrite(latchPin, HIGH);
+}
