@@ -10,8 +10,8 @@ byte leds = 0;
 
 // Servo
 
-int noOfServos = 10;
-int servoPinArray[] = {4,5,6,7,8,9,10,11,12,13};
+int noOfServos = 8;
+int servoPinArray[] = {4,5,6,7,8,9,10,11};
 
 Servo myservo;  // create servo object to control a servo
 
@@ -43,9 +43,11 @@ void setup() {
   pinMode(dataPin, OUTPUT);  // shift registor
   pinMode(clockPin, OUTPUT); // shift registor
 
-  for (int i = 0; i < noOfServos; i++) { // this isn't working!
+  for (int i = 0; i < noOfServos; i++) {
     myservo.attach(servoPinArray[i]); 
     myservo.write(90);
+    delay(350);
+    myservo.detach();
   }
 
   myservo.attach(servoPinArray[0]);
@@ -71,7 +73,7 @@ void loop() {
     Serial.print("Motion count: "); 
     Serial.println(motionCounter);
 
-    m = map(motionCounter,0,30,150,30);
+    m = map(motionCounter,0,30,130,50);
     Serial.print("Servo position: "); 
     Serial.println(m);
     Serial.println("\n");
