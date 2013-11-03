@@ -12,7 +12,7 @@ byte leds = 0;
 
 int noOfServos = 8;
 int servoPinArray[] = {4,5,6,7,8,9,10,11};
-int offsetArray[] = {0,0,0,0,0,0,0,0};
+int offsetArray[] = {83,91,87,81,87,101,98,96};
 
 Servo myservo;  // create servo object to control a servo
 
@@ -46,7 +46,7 @@ void setup() {
 
   for (int i = 0; i < noOfServos; i++) {
     myservo.attach(servoPinArray[i]); 
-    myservo.write(90+offsetArray[i]);
+    myservo.write(offsetArray[i]);
     delay(350);
     myservo.detach();
   }
@@ -74,7 +74,7 @@ void loop() {
     Serial.print("Motion count: "); 
     Serial.println(motionCounter);
 
-    m = map(motionCounter,0,30,10,50);
+    m = map(motionCounter,0,30,130,50);
     Serial.print("Servo position: "); 
     Serial.println(m);
     Serial.println("\n");
