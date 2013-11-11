@@ -12,7 +12,7 @@ byte leds = 0;
 
 int noOfServos = 8;
 int servoPinArray[] = {4,5,6,7,8,9,10,11};
-int offsetArray[] = {83,91,87,81,87,101,98,96};
+int offsetArray[] = {83,90,84,81,87,101,99,96};
 
 Servo myservo;  // create servo object to control a servo
 
@@ -32,7 +32,7 @@ int hourLength = 30; // set to 3600 for full hour
 // Motion
 
 int prevReading = 0; // will get one false reading
-int threshold = 3; // tolerance for motion
+int threshold = 1; // tolerance for motion
 
 int motionCounter; // motion count (beyond threshold)
 
@@ -74,7 +74,7 @@ void loop() {
     Serial.print("Motion count: "); 
     Serial.println(motionCounter);
 
-    m = map(motionCounter,0,30,130,50);
+    m = map(motionCounter,0,30,125,45);
     Serial.print("Servo position: "); 
     Serial.println(m);
     Serial.println("\n");
@@ -92,9 +92,10 @@ void loop() {
     updateShiftRegister();
 
     motionCounter = 0;
-
+    
+    myservo.detach();
     myservo.attach(servoPinArray[h]);
-//    myservo.write(150);
+    myservo.write(125);
     Serial.println("Next Servo");
   } 
 
