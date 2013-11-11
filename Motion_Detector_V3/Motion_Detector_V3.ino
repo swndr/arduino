@@ -39,9 +39,9 @@ void setup() {
 
   Serial.begin(9600);
 
-  pinMode(latchPin, OUTPUT); // shift resistor
-  pinMode(dataPin, OUTPUT);  // shift resistor
-  pinMode(clockPin, OUTPUT); // shift resistor
+  pinMode(latchPin, OUTPUT); // shift register
+  pinMode(dataPin, OUTPUT);  // shift register
+  pinMode(clockPin, OUTPUT); // shift register
 
   for (int i = 0; i < noOfServos; i++) { // this isn't working!
     myservo.attach(servoPinArray[i]); 
