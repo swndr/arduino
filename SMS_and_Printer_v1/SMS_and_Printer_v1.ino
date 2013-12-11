@@ -1,23 +1,3 @@
-/*
- SMS receiver
- 
- This sketch, for the Arduino GSM shield, waits for a SMS message 
- and displays it through the Serial port. 
- 
- Circuit:
- * GSM shield attached to and Arduino
- * SIM card that can receive SMS messages
- 
- created 25 Feb 2012
- by Javier Zorzano / TD
- 
- This example is in the public domain.
- 
- http://arduino.cc/en/Tutorial/GSMExamplesReceiveSMS
- 
- */
-
-// include the GSM library
 #include <GSM.h>
 
 // PIN Number for the SIM
@@ -28,22 +8,26 @@ GSM gsmAccess;
 GSM_SMS sms;
 
 // Array to hold the number a SMS is retreived from
-char senderNumber[20];  
+char senderNumber[20]; 
+char msgChars[160];
 
-String msgArray[5];
+String msgArray[10];
 
 String msg;
 String sender;
 
 int i = 0;
 
+boolean printMsgs = false;
+
 void setup() 
 {
   // initialize serial communications and wait for port to open:
   Serial.begin(9600);
-  while (!Serial) {
-    ; // wait for serial port to connect. Needed for Leonardo only
-  } 
+
+    while (!Serial) {
+      ; // wait for serial port to connect. Needed for Leonardo only
+    } 
 
   Serial.println("SMS Messages Receiver");
 
@@ -90,45 +74,73 @@ void loop()
 
     // Read message bytes and print them
     while(c=sms.read()) {
-      Serial.print(c);
+      //  Serial.print(c);
+      msgChars += c;
       msg += c;
     }
+    
+    for (int m = 0; m < msgChar.size; m++) {
+      Serial.print(msgChars[m]);
+    }
 
-    Serial.println("\nEND OF MESSAGE"); 
+    delay(200);
+
+    // Serial.println("\nEND OF MESSAGE"); 
 
     Serial.println("MSG STRING");
     Serial.println(msg);
 
-    if(msg.equals("testing")) {
-      Serial.println("MATCH");  
-    }
+    delay(200);
 
     sms.beginSMS(senderNumber);
     sms.print("Got this: " + msg);
     sms.endSMS(); 
-    Serial.println("\nCOMPLETE!\n");
+    //   Serial.println("\nCOMPLETE!\n");
+
+    delay(200);
 
     msgArray[i] = msg;
-    Serial.println("Array msg");
-    Serial.println(msgArray[i]);
     i++;
     msg = "";
 
-    Serial.println("\nARRAY LIST"); 
-    for (int n=0; n<5; n++) {
-    Serial.println(msgArray[n]); 
-    }
+    delay(200);
 
     // Delete message from modem memory
     sms.flush();
     Serial.println("MESSAGE DELETED");
 
+    printMsgs = true;
+
   }
 
   delay(1000);
 
+  if (printMsgs == true) {
+
+    Serial.println("\nARRAY LIST"); 
+    pSetup();
+    pSeparate();
+    for (int n=0; n<9; n++) {
+      if (msgArray[n] != "") {
+        int randJustify = random(2);
+        int randSize = random(2);
+       // Serial.println(msgArray[n]);
+        tprint(msgArray[n], randJustify, randSize);
+      }
+    }
+    printReset();
+    printMsgs = false; 
+  }
 
 }
+
+
+
+
+
+
+
+
 
 
 
