@@ -7,6 +7,8 @@
 GSM gsmAccess;
 GSM_SMS sms;
 
+String GSMshield2 = "1234567890"; // whatever other number is!
+
 // Array to hold the number a SMS is retreived from
 char senderNumber[20]; 
 
@@ -78,6 +80,26 @@ void loop()
       Serial.println("Discarded SMS");
       sms.flush();
     }
+    
+    if (sender = GSMshield2) {
+      while(c=sms.read()) {
+        //  Serial.print(c);
+        msg += c; // build message string
+      }
+      
+      Serial.println("Message from other Arduino");
+      Serial.println(msg);
+      
+      if (msg == "RESET") {
+        sender = "0000000000";
+        lights = 0;
+        currentLED = 0;         
+      }
+      
+      sms.flush();
+      Serial.println("MESSAGE DELETED");
+      
+    }
 
     if (sender != previousSender) { // check sender hasn't texted twice
 
@@ -139,7 +161,19 @@ void loop()
     lights = 0; // return lights count to 0 (need to consider 'wasted' characters here?
     printMsgs = true; // for testing, needs moving to if currentLED == 10 (i.e win)
   }
-  
+
+/*  if (currentLED == 10) {
+    // something happens as you've won
+    printMsgs = true;
+
+    // need to text the other GSM shield to reset!
+    sms.beginSMS(GSMshield2);
+    sms.print("RESET");
+    sms.endSMS(); 
+
+    currentLED = 0;
+  } */
+
   if (printMsgs == true) {
 
     Serial.println("\nARRAY LIST"); 
@@ -157,6 +191,7 @@ void loop()
 
 
 }
+
 
 
 
