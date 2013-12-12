@@ -7,13 +7,12 @@
 GSM gsmAccess;
 GSM_SMS sms;
 
-String GSMshield2 = "1234567890"; // whatever other number is!
+String GSMshield1 = "+16463221076";
 
 // Array to hold the number a SMS is retreived from
 char senderNumber[20]; 
 
-String msgArray[100]; // for all the messages needed to win (make bigger)
-String GSM2Array[100]; // to receive from other Arduino
+String msgArray[10]; // for all the messages needed to win (make bigger)
 
 String msg; // each message
 int charLength; // message length
@@ -22,7 +21,6 @@ String sender; // sender number
 String previousSender = 0000000000; // dummy number to compare to first sender
 
 int i = 0;
-int x = 0;
 
 int LEDs[11] = {
   0,1,2,3,4,5,6,7,8,9,10}; // array for the LEDs
@@ -30,7 +28,6 @@ int lights = 0; // to step through LED array
 int currentLED = 0; // to indicate current LED
 
 boolean printMsgs = false; // to stop printing until winner wins
-boolean printGSM2Msgs = false;  // to stop printing until other GSM wins
 
 void setup() 
 {
@@ -84,7 +81,7 @@ void loop()
       sms.flush();
     }
 
-    if (sender == GSMshield2) {
+    if (sender == GSMshield1) {
       while(c=sms.read()) {
         //  Serial.print(c);
         msg += c; // build message string
@@ -92,16 +89,6 @@ void loop()
 
       Serial.println("Message from other Arduino");
       Serial.println(msg);
-
-      GSM2Array[x] = msg; // add message to array
-      x++;
-      msg = ""; // clear message ready for next one
-
-      delay(200);
-
-      if (msg == "PRINT") {
-        printGSM2Msgs = true;
-      }
 
       if (msg == "RESET") {
         sender = "0000000000";
@@ -127,27 +114,21 @@ void loop()
 
       Serial.println("MSG STRING");
       Serial.println(msg);
-      Serial.println("Characters:");
       Serial.println(charLength);
+
+      sms.beginSMS(senderNumber);
+      sms.print("Got it. You're " + charLength + " characters nearer to winning."); // reply to sender
+      sms.endSMS();
 
       delay(200);
 
-      String charReport = String(charLength);
-      String reply = " characters nearer to winning.";
-
-      sms.beginSMS(senderNumber);
-      sms.print("Got it. You\'re " + charReport + " characters nearer to winning."); // reply to sender
-      sms.endSMS();
-
       lights += charLength; // add character length of message to lights count
-      Serial.println("Light count:");
       Serial.println(lights);
-      
+
       msgArray[i] = msg; // add message to array
       i++;
       msg = ""; // clear message ready for next one
-      charLength = 0;
-      
+
       delay(200);
 
       // Delete message from modem memory
@@ -172,7 +153,7 @@ void loop()
 
   delay(1000);
 
-  if (lights >= 160) { // to change to <= 160 (enough to move to next light)
+  if (lights >= 20) { // to change to <= 160 (enough to move to next light)
     currentLED++; // increase LED count
     LEDs[currentLED]; // step through array
     Serial.println("Current LED:");
@@ -190,40 +171,24 @@ void loop()
 
     Serial.println("\nARRAY LIST"); 
 
-    pSetup();
-    // pSeparate();
     for (int n=0; n<9; n++) { // stepping through msg array, need to consider size
       if (msgArray[n] != "") {
-        tprint(msgArray[n]);
+        sms.beginSMS(GSMshield1);
+        sms.print(msgArray[n]); // reply to sender
+        sms.endSMS();
+        delay(200);
       }
     }
-    printReset();
-    printMsgs = false; 
 
-    msgArray[10] = "";
+    sms.beginSMS(GSMshield1);
+    sms.print("PRINT"); // reply to sender
+    sms.endSMS();
+    delay(200);
 
-    // need to text the other GSM shield to reset!
-    //    sms.beginSMS(GSMshield2);
-    //    sms.print("RESET");
-    //    sms.endSMS(); 
+    printMsgs = false;
 
-  }
-
-  if (printGSM2Msgs == true) {
-
-    Serial.println("\nARRAY LIST"); 
-
-    pSetup();
-    // pSeparate();
-    for (int n=0; n<9; n++) { // stepping through msg array, need to consider size
-      if (GSM2Array[n] != "") { 
-        tprint(GSM2Array[n]); // print array of messages from other Arduino
-      }
-    }
-    printReset();
-    printGSM2Msgs = false; 
-
-    GSM2Array[10] = "";
+    msgArray[10] = {
+    };
 
     sender = "0000000000";
     lights = 0;
@@ -233,6 +198,8 @@ void loop()
 
 
 }
+
+
 
 
 
