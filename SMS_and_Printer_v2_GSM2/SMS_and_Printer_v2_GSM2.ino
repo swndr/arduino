@@ -7,7 +7,7 @@
 GSM gsmAccess;
 GSM_SMS sms;
 
-String GSMshield1 = "+16463221076";
+char GSMshield1[13] = "+16463221076";
 
 // Array to hold the number a SMS is retreived from
 char senderNumber[20]; 
@@ -116,8 +116,11 @@ void loop()
       Serial.println(msg);
       Serial.println(charLength);
 
+      String charReport = String(charLength);
+      String reply = " characters nearer to winning.";
+
       sms.beginSMS(senderNumber);
-      sms.print("Got it. You're " + charLength + " characters nearer to winning."); // reply to sender
+      sms.print("Got it. You\'re " + charReport + " characters nearer to winning."); // reply to sender
       sms.endSMS();
 
       delay(200);
@@ -180,15 +183,14 @@ void loop()
       }
     }
 
-    sms.beginSMS(GSMshield1);
-    sms.print("PRINT"); // reply to sender
-    sms.endSMS();
+//    sms.beginSMS(GSMshield1);
+//    sms.print("PRINT"); // reply to sender
+//    sms.endSMS();
     delay(200);
 
     printMsgs = false;
 
-    msgArray[10] = {
-    };
+    msgArray[10] = "";
 
     sender = "0000000000";
     lights = 0;
@@ -198,6 +200,7 @@ void loop()
 
 
 }
+
 
 
 

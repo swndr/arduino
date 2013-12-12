@@ -7,7 +7,7 @@
 GSM gsmAccess;
 GSM_SMS sms;
 
-String GSMshield2 = "1234567890"; // whatever other number is!
+char GSMshield2[13] = "+12345678900"; //  // whatever other number is!
 
 // Array to hold the number a SMS is retreived from
 char senderNumber[20]; 
