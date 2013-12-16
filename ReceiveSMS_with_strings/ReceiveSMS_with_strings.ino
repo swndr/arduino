@@ -93,6 +93,10 @@ void loop()
       Serial.print(c);
       msg += c;
     }
+    
+        // Delete message from modem memory
+    sms.flush();
+    Serial.println("MESSAGE DELETED");
 
     Serial.println("\nEND OF MESSAGE"); 
 
@@ -119,9 +123,7 @@ void loop()
     Serial.println(msgArray[n]); 
     }
 
-    // Delete message from modem memory
-    sms.flush();
-    Serial.println("MESSAGE DELETED");
+
 
   }
 

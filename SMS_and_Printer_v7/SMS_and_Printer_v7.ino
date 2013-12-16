@@ -7,7 +7,8 @@
 GSM gsmAccess;
 GSM_SMS sms;
 
-char GSMshield2[20] = "+19292503120";
+// char GSMshield2[20] = "+19292503120";
+char GSMshield2[20] = "+13106942711";
 
 // Array to hold the number a SMS is retreived from
 char senderNumber[20]; 
@@ -17,20 +18,25 @@ String GSM2Array[50]; // to receive from other Arduino
 
 String msg; // each message
 int charLength; // message length
+String charReport; // String to reply to sender
 
-String sender; // sender number
-String previousSender; // dummy number to compare to first sender
+//String GSMshieldCheck = "+13106942711";
+String GSMshieldCheck;
+//String sender; // sender number
 
 int i = 0;
 int x = 0;
 
+// char s;
+
 int LEDs[6] = {
-  0,1,2,3,4,5}; // array for the LEDs
+  0,4,5,6,11,12}; // array for the LEDs
 int lights = 0; // to step through LED array
 int currentLED = 0; // to indicate current LED
 
 boolean printMsgs = false; // to stop printing until winner wins
 boolean printGSM2Msgs = false;  // to stop printing until other GSM wins
+boolean reset = false;
 
 void setup() 
 {
@@ -41,7 +47,7 @@ void setup()
     ; // wait for serial port to connect. Needed for Leonardo only
   } 
 
-  Serial.println("SMS Messages Receiver");
+  Serial.println("GSM SHIELD ONE");
 
   // connection state
   boolean notConnected = true;
@@ -60,139 +66,147 @@ void setup()
 
   Serial.println("GSM initialized");
   Serial.println("Waiting for messages");
-  
-  previousSender = 0000000000; // dummy number to compare to first sender
-  Serial.println("Stored number : " + previousSender);
+
+  delay(50);
+
+  // GSMshieldCheck = "+13106942711";
+
 }
 
 void loop() 
 {
-  char c;
+ char c;
 
   // If there are any SMSs available()  
   if (sms.available())
   {
+
+    /*  if(sms.peek()=='#')
+     {
+     reset = true;
+     Serial.println("RESETTING");
+     //  sms.flush();
+     } */
+
     Serial.println("Message received from:");
 
     // Get remote number
     sms.remoteNumber(senderNumber, 20);
-    sender = String(senderNumber); // store sender number as a string
-    Serial.println(sender);
+    //  String sender = String(senderNumber); // store sender number as a string
+    Serial.println(senderNumber);
 
-    if (sender == GSMshield2) {
-      while(c=sms.read()) {
-        //  Serial.print(c);
-        msg += c; // build message string
-      }
+/*    //    if (sender.equals(GSMshieldCheck)) {
+    if (strcmp(senderNumber, GSMshield2)  == 0) {
 
       Serial.println("Message from other Arduino");
-      Serial.println(msg);
-
-      GSM2Array[x] = msg; // add message to array
-      x++;
-      msg = ""; // clear message ready for next one
-
-      delay(200);
-
-      if (msg == "PRINT") {
-        printGSM2Msgs = true;
-      }
-
-      if (msg == "RESET") {
-        previousSender = "0000000000";
-        lights = 0;
-        currentLED = 0;         
-      }
-      
-      msg="";
-
-      sms.flush();
-      Serial.println("MESSAGE DELETED");
-
-    }
-
-    if (sender != previousSender) { // check sender hasn't texted twice
 
       // Read message bytes and print them
       while(c=sms.read()) {
-        //  Serial.print(c);
         msg += c; // build message string
         charLength++; // get length of message
       }
 
-      // Serial.println("\nEND OF MESSAGE"); 
+      // Delete message from modem memory
+      sms.flush();
+      Serial.println("MESSAGE DELETED");
+
+      delay(50);
+
+      Serial.println("MSG STRING");
+      Serial.println(msg);
+
+      if (msg != "PRINT") {
+
+        GSM2Array[x] = msg; // add message to array
+        x++;
+        // msg = ""; // clear message ready for next one
+
+        delay(100);
+
+      } 
+
+      else if (msg == "PRINT") {
+        printGSM2Msgs = true;
+        Serial.println("PRINT NOW");
+        // msg = ""; // clear message ready for next one
+
+      } 
+
+      msg = "";
+
+    } 
+
+    else { */
+
+      Serial.println("HUMAN SENDER");
+
+      // Read message bytes and print them
+      while(c=sms.read()) {
+        msg += c; // build message string
+        charLength++; // get length of message
+      }
+
+      // Delete message from modem memory
+      sms.flush();
+      Serial.println("MESSAGE DELETED");
+
+      delay(50); 
 
       Serial.println("MSG STRING");
       Serial.println(msg);
       Serial.println("Characters:");
       Serial.println(charLength);
 
-      delay(200);
+      charReport = String(charLength);
 
-      String charReport = String(charLength);
-   //   String reply = " characters nearer to winning.";
+      delay(50); 
 
       sms.beginSMS(senderNumber);
       sms.print("Got it. You\'re " + charReport + " characters nearer to winning."); // reply to sender
       sms.endSMS();
 
+      delay(50); 
+
       lights += charLength; // add character length of message to lights count
       Serial.println("Light count:");
       Serial.println(lights);
-      
+
       msgArray[i] = msg; // add message to array
-      i++;
-      msg = ""; // clear message ready for next one
+      i++; 
+
       charLength = 0;
-      
-      delay(200);
+      msg = "";
 
-      // Delete message from modem memory
-      sms.flush();
-      Serial.println("MESSAGE DELETED");
-
-      previousSender = sender; // set current sender as previous
-      Serial.println("Stored number : " + previousSender);
-
-    } 
-    else if (sender == previousSender) { // reply if sender has texted twice in a row
-    
-    Serial.println("Already received from : " + previousSender);
-    
-      sms.beginSMS(senderNumber);
-      sms.print("You can't text twice in a row. Find a buddy to help you!");
-      sms.endSMS(); 
-
-      // Delete message from modem memory
-      sms.flush();
-      Serial.println("MESSAGE DELETED");
-    }
+  //  }
 
   }
 
-  delay(1000);
+  delay(50);
 
   if (lights >= 160) { // to change to <= 160 (enough to move to next light)
     currentLED++; // increase LED count
-    LEDs[currentLED]; // step through array
+    digitalWrite(LEDs[currentLED], HIGH); // step through array
     Serial.println("Current LED:");
     Serial.println(LEDs[currentLED]);
     lights -= 160; // continue counting from characters beyond 160
-    printMsgs = true; // for testing, needs moving to if currentLED == 10 (i.e win)
   }
 
-   // if (currentLED == 5) {
-   // something happens as you've won
-  // printMsgs = true;
-  // } 
+  if (currentLED == 5) {
+    // you've won
+    printMsgs = true;
+  } 
 
   if (printMsgs == true) {
+
+    // need to text the other GSM shield to reset
+    sms.beginSMS(GSMshield2);
+    sms.print("RESET");
+    sms.endSMS();
 
     Serial.println("\nARRAY LIST"); 
 
     pSetup();
-    // pSeparate();
-    for (int n=0; n<9; n++) { // stepping through msg array, need to consider size
+    for (int n=0; n<50; n++) { // stepping through msg array, need to consider size
       if (msgArray[n] != "") {
         tprint(msgArray[n]);
       }
@@ -200,39 +214,69 @@ void loop()
     printReset();
     printMsgs = false; 
 
-    msgArray[50] = "";
-
-    // need to text the other GSM shield to reset!
-    //    sms.beginSMS(GSMshield2);
-    //    sms.print("RESET");
-    //    sms.endSMS(); 
+    reset = true;
 
   }
 
- if (printGSM2Msgs == true) {
+  if (printGSM2Msgs == true) {
 
     Serial.println("\nARRAY LIST"); 
 
     pSetup();
-    // pSeparate();
-    for (int n=0; n<9; n++) { // stepping through msg array, need to consider size
+    for (int n=0; n<50; n++) { // stepping through msg array, need to consider size
       if (GSM2Array[n] != "") { 
         tprint(GSM2Array[n]); // print array of messages from other Arduino
       }
     }
+
     printReset();
     printGSM2Msgs = false; 
 
-    GSM2Array[10] = "";
+    GSM2Array[50] = "";
 
-    previousSender = "0000000000";
-    lights = 0;
-    currentLED = 0;   
+    reset = true;
 
   }
 
+  if (reset == true) {
+
+    msgArray[50] = "";
+
+    lights = 0;
+    currentLED = 0;
+    charLength = 0;
+
+    msg="";
+
+    for (int n=5; n>0; n--) {
+      currentLED = n;
+      digitalWrite(LEDs[currentLED], LOW);   
+    }
+
+    Serial.println("EVERYTHING RESET");
+
+    reset = false;
+  }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
