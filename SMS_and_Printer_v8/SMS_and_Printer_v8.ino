@@ -201,8 +201,9 @@ void loop()
     if (msg != "PRINT") {
 
       GSM2Array[x] = msg; // add message to array
-      x++;
       Serial.println("Added to array");
+      Serial.println(GSM2Array[x]);
+      x++;
 
       delay(50);
 
@@ -212,20 +213,14 @@ void loop()
 
       printGSM2Msgs = true;
 
-      /*  for (int n=0; n<50; n++) { // stepping through msg array, need to consider size
-       if (GSM2Array[n] != "" && GSM2Array[n] != "PRINT") { 
-       Serial.println(GSM2Array[n]); // print array of messages from other Arduino
-       }
-       
-       } */
+    }
 
       received = false;
       fromOtherArduino = false;
 
-    }
   }
 
-  if (currentLED == 2) {
+  if (currentLED == 2 yo == false) {
     // if (currentLED == 5) {
 
     printMsgs = true;
@@ -242,7 +237,7 @@ void loop()
     Serial.println("PRINT LIST"); 
 
     pSetup();
-    for (int n=0; n<50; n++) { // stepping through msg array, need to consider size
+    for (int n=0; n<5; n++) { // stepping through msg array, need to consider size
       if (msgArray[n] != "") {
         tprint(msgArray[n]);
         Serial.println(msgArray[n]);
@@ -260,8 +255,8 @@ void loop()
     Serial.println("PRINT LIST"); 
 
     pSetup();
-    for (int n=0; n<50; n++) { // stepping through msg array, need to consider size
-      if (GSM2Array[n] != "") { 
+    for (int n=0; n<5; n++) { // stepping through msg array, need to consider size
+      if (GSM2Array[n] != "PRINT") { 
         tprint(GSM2Array[n]); // print array of messages from other Arduino
         Serial.println(GSM2Array[n]);
       }

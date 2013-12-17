@@ -5,14 +5,6 @@
 int printer_RX_Pin = 9;  // This is the green wire
 int printer_TX_Pin = 10;  // This is the yellow wire
 
-/*char txtJustify[] = {
-  'L', 'C', 'R'};
-char txtSize[] = {
-  'S', 'M', 'L'};
-
-int SMSstrings[] = {
-  0,10,30,39,49,59,79,99,109,119,139,159};*/
-
 Adafruit_Thermal printer(printer_RX_Pin, printer_TX_Pin);  
 
 void pSetup() {
@@ -121,11 +113,8 @@ void tprint (String printsms) {
     printer.println(printsms11);
 
 
-    printer.feed(10); // needs feed
+    printer.feed(15); // needs feed
     
-  /*  printer.printBarcode("YEAH", CODE39); // max 4?
-    printer.setBarcodeHeight(100);
-    //  printer.feed(1);*/
   }
 }
 
