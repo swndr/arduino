@@ -220,7 +220,7 @@ void loop()
 
   }
 
-  if (currentLED == 2 yo == false) {
+  if (currentLED == 2 && youLose == false) {
     // if (currentLED == 5) {
 
     printMsgs = true;

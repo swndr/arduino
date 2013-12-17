@@ -101,13 +101,6 @@ void loop()
 
     delay(100);
 
-    if (msg == "RESET") {
-
-      reset = true;
-
-    }
-
-
     // Delete message from modem memory
     sms.flush();
     Serial.println("MESSAGE DELETED");
@@ -116,8 +109,14 @@ void loop()
     received = true;
 
   }
+  
+    if (msg == "RESET") {
 
-  if (received == true && repeatSender == false && reset == false) {
+      reset = true;
+
+    }
+
+  else if (received == true && repeatSender == false && reset == false) {
 
     Serial.println("MSG STRING");
     Serial.println(msg);
