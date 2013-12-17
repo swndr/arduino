@@ -226,6 +226,8 @@ void loop()
     Serial.println("EVERYTHING RESET");
 
     printMsgs = false;
+    
+    reset = true;
 
   }
 
