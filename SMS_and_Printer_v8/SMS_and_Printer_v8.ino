@@ -193,7 +193,7 @@ void loop()
 
   }
 
-  else if (received == true && fromOtherArduino == true) {
+  else if (received == true && fromOtherArduino == true && youLose == true) {
 
     Serial.println("ARDUINO MSG STRING");
     Serial.println(msg);

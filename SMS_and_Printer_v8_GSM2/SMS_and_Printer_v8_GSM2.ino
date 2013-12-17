@@ -113,6 +113,7 @@ void loop()
     if (msg == "RESET") {
 
       reset = true;
+      received = false;
 
     }
 
