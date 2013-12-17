@@ -33,7 +33,7 @@ int i = 0;
 int x = 0;
 
 int LEDs[6] = {
-  6,5,4,3,2,1}; // array for the LEDs
+  0,6,5,4,3,2}; // array for the LEDs
 int currentLED = 0; // to indicate current LED
 
 boolean fromOtherArduino = false;
