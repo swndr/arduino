@@ -49,9 +49,14 @@ void setup()
   // initialize serial communications and wait for port to open:
   Serial.begin(9600);
   
-    pinMode(latchPin, OUTPUT); // shift register
+  pinMode(latchPin, OUTPUT); // shift register
   pinMode(dataPin, OUTPUT);  // shift register
   pinMode(clockPin, OUTPUT); // shift register
+  
+  for (int l = 0; l < 7; l++) {
+  bitClear(leds, l);  // step through array
+  updateShiftRegister();
+  }
 
   while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
@@ -143,10 +148,10 @@ void loop()
     delay(20); 
 
     currentLED++; // increase LED count
-    bitSet(leds, LEDs[currentLED]);  // step through array
+    bitSet(leds, currentLED);  // step through array
     updateShiftRegister();
     Serial.println("Current LED:");
-    Serial.println(LEDs[currentLED]);
+    Serial.println(currentLED);
 
     msgArray[i] = msg; // add message to array
 
@@ -236,11 +241,16 @@ void loop()
     memset(previousSender4,'\0',20);
 
     msgArray[5] = ("","","","","");
+    
+      for (int l = 0; l < 7; l++) {
+  bitClear(leds, l);  // step through array
+  updateShiftRegister();
+  }
 
-    for (int n=5; n>0; n--) {
+ /*   for (int n=5; n>0; n--) {
       currentLED = n;
       digitalWrite(LEDs[currentLED], LOW);   
-    }
+    } */
     
     currentLED = 0;
 
