@@ -9,8 +9,8 @@ GSM_SMS sms;
 
 // Shift Register
 
-int latchPin = 9;
-int clockPin = 12;
+int latchPin = 12;
+int clockPin = 13;
 int dataPin = 11;
 
 byte leds = 0;
