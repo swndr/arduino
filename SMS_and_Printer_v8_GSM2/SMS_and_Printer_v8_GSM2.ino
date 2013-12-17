@@ -82,177 +82,159 @@ void loop()
 
   if (processing == true) {
 
-    /*  if(sms.peek()=='#')
-     {
-     // reset = true;
-     Serial.println("RESETTING");
-     sms.flush();
-     } */
+    Serial.println("Message received from:");
 
-    if(youLose == true)
-    {
-      Serial.println("IGNORING MESSAGE");
-      sms.flush();
-      processing = false;
-    } 
-    else {  
+    // Get remote number
+    sms.remoteNumber(senderNumber, 20);
+    Serial.println(senderNumber);
 
-      Serial.println("Message received from:");
-
-      // Get remote number
-      sms.remoteNumber(senderNumber, 20);
-      Serial.println(senderNumber);
-
-if (strcmp(senderNumber, previousSender1)  == 0 || strcmp(senderNumber, previousSender2)  == 0 || strcmp(senderNumber, previousSender3)  == 0 || strcmp(senderNumber, previousSender4)  == 0) {
-  repeatSender = true;
-}
-
-msg = "";
-
-// Read message bytes and print them
-while(c=sms.read()) {
-  //  Serial.print(c);
-  msg.concat(c); // build message string
-  delay(5);
-}
-
-delay(100);
-
-if (msg == "RESET") {
-
-  youLose = true;
-  reset = true;
-
-}
-
-
-// Delete message from modem memory
-sms.flush();
-Serial.println("MESSAGE DELETED");
-
-processing = false;
-received = true;
-
-}
-}
-
-if (received == true && repeatSender == false && reset == false) {
-
-  Serial.println("MSG STRING");
-  Serial.println(msg);
-
-  delay(20);
-
-  sms.beginSMS(senderNumber);
-  sms.print("Got it. Get the next person to text."); // reply to sender
-  sms.endSMS();
-
-  delay(20); 
-
-  currentLED++; // increase LED count
-  digitalWrite(LEDs[currentLED], HIGH); // step through array
-  Serial.println("Current LED:");
-  Serial.println(LEDs[currentLED]);
-
-  msgArray[i] = msg; // add message to array
-
-  if (i == 0) {
-    strncpy(previousSender1, senderNumber, 20); // set current sender as previous
-    Serial.println("Stored number");
-    Serial.println(previousSender1);
-  }
-
-  else if (i == 1) {
-    strncpy(previousSender2, senderNumber, 20); // set current sender as previous
-    Serial.println("Stored number");
-    Serial.println(previousSender2);
-  }
-
-  else if (i == 2) {
-    strncpy(previousSender3, senderNumber, 20); // set current sender as previous
-    Serial.println("Stored number");
-    Serial.println(previousSender3);
-  }
-
-  else if (i == 3) {
-    strncpy(previousSender4, senderNumber, 20); // set current sender as previous
-    Serial.println("Stored number");
-    Serial.println(previousSender4);
-  }
-
-  i++;
-
-  received = false;
-
-}
-
-else if (received == true && repeatSender == true && reset == false) {
-  Serial.println("REPEAT SENDER");
-
-  delay(20); 
-
-  sms.beginSMS(senderNumber);
-  sms.print("You can't text twice in a row. Find a buddy to help you!");
-  sms.endSMS(); 
-
-  delay(20); 
-
-  received = false;
-  repeatSender = false;
-
-}
-
-if (currentLED == 2) {
-// if (currentLED == 5) {
-
-  printMsgs = true;
-  Serial.println("WINNER");
-}
-
-
-if (printMsgs == true) {
-
-  Serial.println("\nARRAY LIST"); 
-
-  for (int n=0; n<50; n++) { // stepping through msg array, need to consider size
-    if (msgArray[n] != "") {
-      sms.beginSMS(GSMshield1);
-      sms.print(msgArray[n]); // reply to sender
-      sms.endSMS();
-      delay(200);
+    if (strcmp(senderNumber, previousSender1)  == 0 || strcmp(senderNumber, previousSender2)  == 0 || strcmp(senderNumber, previousSender3)  == 0 || strcmp(senderNumber, previousSender4)  == 0) {
+      repeatSender = true;
     }
+
+    msg = "";
+
+    // Read message bytes and print them
+    while(c=sms.read()) {
+      //  Serial.print(c);
+      msg.concat(c); // build message string
+      delay(5);
+    }
+
+    delay(100);
+
+    if (msg == "RESET") {
+
+      reset = true;
+
+    }
+
+
+    // Delete message from modem memory
+    sms.flush();
+    Serial.println("MESSAGE DELETED");
+
+    processing = false;
+    received = true;
+
   }
 
-  sms.beginSMS(GSMshield1);
-  sms.print("PRINT"); // tell GSMshield1 to print
-  sms.endSMS();
+  if (received == true && repeatSender == false && reset == false) {
 
-  delay(200);
+    Serial.println("MSG STRING");
+    Serial.println(msg);
 
-  char senderNumber[20];
-  char previousSender1[20];
-  char previousSender2[20];
-  char previousSender3[20];
-  char previousSender4[20];
+    delay(20);
 
-  msgArray[5] = "";
+    sms.beginSMS(senderNumber);
+    sms.print("Got it. Get the next person to text."); // reply to sender
+    sms.endSMS();
 
-  currentLED = 0;
+    delay(20); 
 
-  for (int n=5; n>0; n--) {
-    currentLED = n;
-    digitalWrite(LEDs[currentLED], LOW);   
+    currentLED++; // increase LED count
+    digitalWrite(LEDs[currentLED], HIGH); // step through array
+    Serial.println("Current LED:");
+    Serial.println(LEDs[currentLED]);
+
+    msgArray[i] = msg; // add message to array
+
+    if (i == 0) {
+      strncpy(previousSender1, senderNumber, 20); // set current sender as previous
+      Serial.println("Stored number");
+      Serial.println(previousSender1);
+    }
+
+    else if (i == 1) {
+      strncpy(previousSender2, senderNumber, 20); // set current sender as previous
+      Serial.println("Stored number");
+      Serial.println(previousSender2);
+    }
+
+    else if (i == 2) {
+      strncpy(previousSender3, senderNumber, 20); // set current sender as previous
+      Serial.println("Stored number");
+      Serial.println(previousSender3);
+    }
+
+    else if (i == 3) {
+      strncpy(previousSender4, senderNumber, 20); // set current sender as previous
+      Serial.println("Stored number");
+      Serial.println(previousSender4);
+    }
+
+    i++;
+
+    received = false;
+
   }
 
-  Serial.println("EVERYTHING RESET");
+  else if (received == true && repeatSender == true && reset == false) {
+    Serial.println("REPEAT SENDER");
 
-  printMsgs = false;
-  reset = false;
-  youLose = false;
+    delay(20); 
 
-}
+    sms.beginSMS(senderNumber);
+    sms.print("You can't text twice in a row. Find a buddy to help you!");
+    sms.endSMS(); 
 
- if (reset == true) {
+    delay(20); 
+
+    received = false;
+    repeatSender = false;
+
+  }
+
+  if (currentLED == 2) {
+    // if (currentLED == 5) {
+
+    printMsgs = true;
+    Serial.println("WINNER");
+  }
+
+
+  if (printMsgs == true) {
+
+    Serial.println("SEND TO PRINT LIST"); 
+
+    for (int n=0; n<50; n++) { // stepping through msg array, need to consider size
+      if (msgArray[n] != "") {
+        sms.beginSMS(GSMshield1);
+        sms.print(msgArray[n]); // reply to sender
+        sms.endSMS();
+        delay(200);
+      }
+    }
+
+    sms.beginSMS(GSMshield1);
+    sms.print("PRINT"); // tell GSMshield1 to print
+    sms.endSMS();
+
+    delay(200);
+
+    char senderNumber[20];
+    char previousSender1[20];
+    char previousSender2[20];
+    char previousSender3[20];
+    char previousSender4[20];
+
+    msgArray[5] = "";
+
+    currentLED = 0;
+
+    for (int n=5; n>0; n--) {
+      currentLED = n;
+      digitalWrite(LEDs[currentLED], LOW);   
+    }
+
+    Serial.println("EVERYTHING RESET");
+
+    printMsgs = false;
+    reset = false;
+
+  }
+
+  if (reset == true) {
 
     char senderNumber[20];
     char previousSender1[20];
@@ -272,11 +254,11 @@ if (printMsgs == true) {
     Serial.println("EVERYTHING RESET");
 
     reset = false;
-    youLose = false;
 
   }
 
 }
+
 
 
 

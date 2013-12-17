@@ -86,58 +86,48 @@ void loop()
 
   if (processing == true) {
 
-    /*  if(sms.peek()=='#')
-     {
-     // reset = true;
-     Serial.println("RESETTING");
-     sms.flush();
-     } */
+    Serial.println("Message received from:");
 
-    if(youLose == true)
+    // Get remote number
+    sms.remoteNumber(senderNumber, 20);
+    Serial.println(senderNumber);
+
+    if (strcmp(senderNumber, GSMshield2)  == 0) {
+      fromOtherArduino = true;
+      youLose = true;
+    }
+
+    else if (strcmp(senderNumber, previousSender1)  == 0 || strcmp(senderNumber, previousSender2)  == 0 || strcmp(senderNumber, previousSender3)  == 0 || strcmp(senderNumber, previousSender4)  == 0) {
+      repeatSender = true;
+    }
+
+    else if (youLose == true && fromOtherArduino == false)
     {
       Serial.println("IGNORING MESSAGE");
       sms.flush();
-      processing = false;
     } 
-    else {  
 
-      Serial.println("Message received from:");
+    msg = "";
 
-      // Get remote number
-      sms.remoteNumber(senderNumber, 20);
-      Serial.println(senderNumber);
-
-      if (strcmp(senderNumber, GSMshield2)  == 0) {
-        fromOtherArduino = true;
-        youLose = true;
-      }
-
-      else if (strcmp(senderNumber, previousSender1)  == 0 || strcmp(senderNumber, previousSender2)  == 0 || strcmp(senderNumber, previousSender3)  == 0 || strcmp(senderNumber, previousSender4)  == 0) {
-        repeatSender = true;
-      }
-
-      msg = "";
-
-      // Read message bytes and print them
-      while(c=sms.read()) {
-        //  Serial.print(c);
-        msg.concat(c); // build message string
-        delay(5);
-      }
-
-      delay(100);
-
-      // Delete message from modem memory
-      sms.flush();
-      Serial.println("MESSAGE DELETED");
-
-      processing = false;
-      received = true;
-
+    // Read message bytes and print them
+    while(c=sms.read()) {
+      //  Serial.print(c);
+      msg.concat(c); // build message string
+      delay(5);
     }
+
+    delay(100);
+
+    // Delete message from modem memory
+    sms.flush();
+    Serial.println("MESSAGE DELETED");
+
+    processing = false;
+    received = true;
+
   }
 
-  if (received == true && repeatSender == false && fromOtherArduino == false) {
+  if (received == true && repeatSender == false && fromOtherArduino == false && youLose == false) {
 
     Serial.println("MSG STRING");
     Serial.println(msg);
@@ -187,7 +177,7 @@ void loop()
 
   }
 
-  else if (received == true && repeatSender == true) {
+  else if (received == true && repeatSender == true && youLose == false) {
     Serial.println("REPEAT SENDER");
 
     delay(20); 
@@ -222,20 +212,21 @@ void loop()
 
       printGSM2Msgs = true;
 
-      for (int n=0; n<50; n++) { // stepping through msg array, need to consider size
-        if (GSM2Array[n] != "" && GSM2Array[n] != "PRINT") { 
-          Serial.println(GSM2Array[n]); // print array of messages from other Arduino
-        }
-      }
+      /*  for (int n=0; n<50; n++) { // stepping through msg array, need to consider size
+       if (GSM2Array[n] != "" && GSM2Array[n] != "PRINT") { 
+       Serial.println(GSM2Array[n]); // print array of messages from other Arduino
+       }
+       
+       } */
+
+      received = false;
+      fromOtherArduino = false;
 
     }
-
-    received = false;
-    fromOtherArduino = false;
-
   }
+
   if (currentLED == 2) {
- // if (currentLED == 5) {
+    // if (currentLED == 5) {
 
     printMsgs = true;
     Serial.println("WINNER");
@@ -248,7 +239,7 @@ void loop()
 
   if (printMsgs == true) {
 
-    Serial.println("\nARRAY LIST"); 
+    Serial.println("PRINT LIST"); 
 
     pSetup();
     for (int n=0; n<50; n++) { // stepping through msg array, need to consider size
@@ -266,7 +257,7 @@ void loop()
 
   if (printGSM2Msgs == true) {
 
-    Serial.println("\nARRAY LIST"); 
+    Serial.println("PRINT LIST"); 
 
     pSetup();
     for (int n=0; n<50; n++) { // stepping through msg array, need to consider size
@@ -310,6 +301,9 @@ void loop()
 
   }
 }
+
+
+
 
 
 
