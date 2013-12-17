@@ -234,7 +234,7 @@ void loop()
     sms.beginSMS(GSMshield2);
     sms.print("RESET");
     sms.endSMS();
-  }
+  } 
 
   if (printMsgs == true) {
 
