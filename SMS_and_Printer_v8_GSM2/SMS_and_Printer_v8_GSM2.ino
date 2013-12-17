@@ -89,6 +89,7 @@ void loop()
     
     if (strcmp(senderNumber, GSMshield1)  == 0) {
     fromOtherArduino = true;
+     reset = true;
     }
 
     else if (strcmp(senderNumber, previousSender1)  == 0 || strcmp(senderNumber, previousSender2)  == 0 || strcmp(senderNumber, previousSender3)  == 0 || strcmp(senderNumber, previousSender4)  == 0) {
@@ -114,15 +115,9 @@ void loop()
     received = true;
 
   }
-  
-    if (msg == "RESET") {
 
-      reset = true;
-      received = false;
 
-    }
-
-  else if (received == true && fromOtherArduino = false && repeatSender == false && reset == false) {
+    if (received == true && fromOtherArduino == false && repeatSender == false && reset == false) {
 
     Serial.println("MSG STRING");
     Serial.println(msg);
@@ -172,7 +167,7 @@ void loop()
 
   }
 
-  else if (received == true && repeatSender == true && fromOtherArduino = false && reset == false) {
+  else if (received == true && repeatSender == true && fromOtherArduino == false && reset == false) {
     Serial.println("REPEAT SENDER");
 
     delay(20); 
@@ -254,7 +249,8 @@ void loop()
     }
 
     Serial.println("EVERYTHING RESET");
-
+    
+    received = false;
     reset = false;
 
   }
