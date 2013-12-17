@@ -224,14 +224,15 @@ void loop()
 
     msgArray[5] = ("","","","","");
 
-    currentLED = 0;
-
     for (int n=5; n>0; n--) {
       currentLED = n;
       digitalWrite(LEDs[currentLED], LOW);   
     }
+    
+    currentLED = 0;
 
     Serial.println("EVERYTHING RESET");
+    Serial.println(currentLED);
 
     received = false;
     fromOtherArduino = false;
