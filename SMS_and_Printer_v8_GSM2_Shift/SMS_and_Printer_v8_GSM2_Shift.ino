@@ -241,13 +241,15 @@ void loop()
     memset(previousSender4,'\0',20);
 
     msgArray[5] = ("","","","","");
+    
+        currentLED = 0;
 
     for (int l = 0; l <= 5; l++) {
       bitClear(leds, l);  // step through array
       updateShiftRegister();
     }
 
-    currentLED = 0;
+
 
     Serial.println("EVERYTHING RESET");
     Serial.println(currentLED);
