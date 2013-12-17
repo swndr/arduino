@@ -7,8 +7,8 @@
 GSM gsmAccess;
 GSM_SMS sms;
 
-// char GSMshield2[20] = "+19292503120";
-char GSMshield2[20] = "+13106942711";
+char GSMshield2[20] = "+19292503120";
+// char GSMshield2[20] = "+13106942711";
 
 // Array to hold the number a SMS is retreived from
 char senderNumber[20];
@@ -234,8 +234,8 @@ void loop()
     fromOtherArduino = false;
 
   }
-
-  if (currentLED == 5) {
+  if (currentLED == 2) {
+ // if (currentLED == 5) {
 
     printMsgs = true;
     Serial.println("WINNER");

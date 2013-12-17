@@ -202,7 +202,8 @@ else if (received == true && repeatSender == true && reset == false) {
 
 }
 
-if (currentLED == 5) {
+if (currentLED == 2) {
+// if (currentLED == 5) {
 
   printMsgs = true;
   Serial.println("WINNER");
