@@ -277,11 +277,11 @@ void loop()
     i = 0;
     x = 0;
 
-    char senderNumber[20];
-    char previousSender1[20];
-    char previousSender2[20];
-    char previousSender3[20];
-    char previousSender4[20];
+    char senderNumber[20]  = { 0 };
+    char previousSender1[20]  = { 0 };
+    char previousSender2[20]  = { 0 };
+    char previousSender3[20]  = { 0 };
+    char previousSender4[20]  = { 0 };
 
     msgArray[5] = "";
 
