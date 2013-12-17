@@ -235,13 +235,13 @@ void loop()
 
     i = 0;
 
-    char senderNumber[20]  = { 0 };
-    char previousSender1[20]  = { 0 };
-    char previousSender2[20]  = { 0 };
-    char previousSender3[20]  = { 0 };
-    char previousSender4[20]  = { 0 };
+    memset(senderNumber,'\0',20);
+    memset(previousSender1,'\0',20);
+    memset(previousSender2,'\0',20);
+    memset(previousSender3,'\0',20);
+    memset(previousSender4,'\0',20);
 
-    msgArray[5] = "";
+    msgArray[5] = ("","","","","");
 
     currentLED = 0;
 

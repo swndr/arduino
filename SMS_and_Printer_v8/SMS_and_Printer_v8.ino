@@ -76,6 +76,7 @@ void setup()
 
 void loop() 
 {
+  
   char c;
 
   // If there are any SMSs available()  
@@ -99,6 +100,10 @@ void loop()
 
     else if (strcmp(senderNumber, previousSender1)  == 0 || strcmp(senderNumber, previousSender2)  == 0 || strcmp(senderNumber, previousSender3)  == 0 || strcmp(senderNumber, previousSender4)  == 0) {
       repeatSender = true;
+      Serial.println(senderNumber);
+      Serial.println(previousSender1);
+      Serial.println(previousSender2);
+      Serial.println("Found a duplicate number");
     }
 
     else if (youLose == true && fromOtherArduino == false)
@@ -111,7 +116,6 @@ void loop()
 
     // Read message bytes and print them
     while(c=sms.read()) {
-      //  Serial.print(c);
       msg.concat(c); // build message string
       delay(5);
     }
@@ -266,31 +270,31 @@ void loop()
 
     printGSM2Msgs = false; 
 
-    GSM2Array[5] = "";
+    GSM2Array[5] = ("","","","","");
 
     reset = true;
 
   }
-
-  if (reset == true) {
+  
+      if (reset == true) {
     
     i = 0;
     x = 0;
+    
+    memset(senderNumber,'\0',20);
+    memset(previousSender1,'\0',20);
+    memset(previousSender2,'\0',20);
+    memset(previousSender3,'\0',20);
+    memset(previousSender4,'\0',20);
 
-    char senderNumber[20]  = { 0 };
-    char previousSender1[20]  = { 0 };
-    char previousSender2[20]  = { 0 };
-    char previousSender3[20]  = { 0 };
-    char previousSender4[20]  = { 0 };
-
-    msgArray[5] = "";
-
-    currentLED = 0;
+    msgArray[5] = ("","","","","");
 
     for (int n=5; n>0; n--) {
       currentLED = n;
       digitalWrite(LEDs[currentLED], LOW);   
     }
+    
+    currentLED = 0;
 
     Serial.println("EVERYTHING RESET");
 
@@ -305,6 +309,7 @@ void loop()
 
 
   }
+
 }
 
 

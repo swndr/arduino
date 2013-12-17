@@ -19,12 +19,12 @@ void tprint (String printsms) {
 
     // message split into substrings that will format properly
     String printsms1 = printsms.substring(0,10);
-    String printsms2 = printsms.substring(10,30);
-    String printsms3 = printsms.substring(30,39);
-    String printsms4 = printsms.substring(39,49);
-    String printsms5 = printsms.substring(49,59);
-    String printsms6 = printsms.substring(59,79);
-    String printsms7 = printsms.substring(79,99);
+    String printsms2 = printsms.substring(10,29);
+    String printsms3 = printsms.substring(29,38);
+    String printsms4 = printsms.substring(38,48);
+    String printsms5 = printsms.substring(48,58);
+    String printsms6 = printsms.substring(58,78);
+    String printsms7 = printsms.substring(78,99);
     String printsms8 = printsms.substring(99,109);
     String printsms9 = printsms.substring(109,119);
     String printsms10 = printsms.substring(119,139);
