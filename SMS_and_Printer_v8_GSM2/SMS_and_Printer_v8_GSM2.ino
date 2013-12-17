@@ -233,11 +233,13 @@ void loop()
 
   if (reset == true) {
 
-    char senderNumber[20] = "+00000000000";
-    char previousSender1[20] = "+00000000000";
-    char previousSender2[20] = "+00000000000";
-    char previousSender3[20] = "+00000000000";
-    char previousSender4[20] = "+00000000000";
+    i = 0;
+
+    char senderNumber[20];
+    char previousSender1[20];
+    char previousSender2[20];
+    char previousSender3[20];
+    char previousSender4[20];
 
     msgArray[5] = "";
 
