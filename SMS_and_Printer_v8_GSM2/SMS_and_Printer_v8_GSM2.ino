@@ -20,7 +20,7 @@ String msgArray[5]; // for all the messages needed to win (make bigger)
 
 String msg; // each message
 
-int i = 0;
+byte i = 0;
 
 int LEDs[6] = {
   0,4,5,6,11,12}; // array for the LEDs
@@ -183,8 +183,7 @@ void loop()
 
   }
 
-  if (currentLED == 2 && reset == false) {
-    // if (currentLED == 5) {
+  if (currentLED == 5 && reset == false) {
 
     printMsgs = true;
     Serial.println("WINNER");

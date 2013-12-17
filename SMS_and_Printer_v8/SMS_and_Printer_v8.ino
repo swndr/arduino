@@ -22,8 +22,8 @@ String GSM2Array[5]; // to receive from other Arduino
 
 String msg; // build message
 
-int i = 0;
-int x = 0;
+byte i = 0;
+byte x = 0;
 
 int LEDs[6] = {
   0,4,5,6,11,12}; // array for the LEDs
@@ -224,8 +224,7 @@ void loop()
 
   }
 
-  if (currentLED == 2 && youLose == false) {
-    // if (currentLED == 5) {
+  if (currentLED == 5 && youLose == false) {
 
     printMsgs = true;
     Serial.println("WINNER");

@@ -8,44 +8,41 @@ GSM gsmAccess;
 GSM_SMS sms;
 
 // Shift Register
-int latchPin = 12;
-int clockPin = 13;
-int dataPin = 11;
+const int latchPin = 12;
+const int clockPin = 13;
+const int dataPin = 11;
 
 byte leds = 0;
 
-char GSMshield2[20] = "+19292503120";
+char GSM2[13] = "+19292503120";
 
 // Array to hold the number a SMS is retreived from
-char senderNumber[20];
-char previousSender1[20];
-char previousSender2[20];
-char previousSender3[20];
-char previousSender4[20];
+char sender[13];
+char pSndr1[13];
+char pSndr2[13];
+char pSndr3[13];
+char pSndr4[13];
 
 String msgArray[5]; // for all the messages needed to win
-String GSM2Array[5]; // to receive from other Arduino
 
 String msg; // build message
 
-int i = 0;
-int x = 0;
+byte i = 0;
 
 int LEDs[6] = {
   0,6,5,4,3,2}; // array for the LEDs
-int currentLED = 0; // to indicate current LED
+int LEDon = 0; // to indicate current LED
 
-boolean fromOtherArduino = false;
-boolean repeatSender = false;
+boolean otherGSM = false;
+boolean pSender = false;
 
 boolean printMsgs = false; // to stop printing until winner wins
-boolean printGSM2Msgs = false;  // to stop printing until other GSM wins
 boolean reset = false;
 
 boolean processing = false;
 boolean received = false;
 
-boolean youLose = false;
+boolean lost = false;
 
 void setup() 
 {
@@ -104,19 +101,19 @@ void loop()
     Serial.println("Message from:");
 
     // Get remote number
-    sms.remoteNumber(senderNumber, 20);
-    Serial.println(senderNumber);
+    sms.remoteNumber(sender, 13);
+    Serial.println(sender);
 
-    if (strcmp(senderNumber, GSMshield2)  == 0) {
-      fromOtherArduino = true;
-      youLose = true;
+    if (strcmp(sender, GSM2)  == 0) {
+      otherGSM = true;
+      lost = true;
     }
 
-    else if (strcmp(senderNumber, previousSender1)  == 0 || strcmp(senderNumber, previousSender2)  == 0 || strcmp(senderNumber, previousSender3)  == 0 || strcmp(senderNumber, previousSender4)  == 0) {
-      repeatSender = true;
+    else if (strcmp(sender, pSndr1)  == 0 || strcmp(sender, pSndr2)  == 0 || strcmp(sender, pSndr3)  == 0 || strcmp(sender, pSndr4)  == 0) {
+      pSender = true;
     }
   
-    else if (youLose == true && fromOtherArduino == false)
+    else if (lost == true && otherGSM == false)
     {
       Serial.println("IGNORING MESSAGE");
       sms.flush();
@@ -141,49 +138,49 @@ void loop()
 
   }
 
-  if (received == true && repeatSender == false && fromOtherArduino == false && youLose == false) {
+  if (received == true && pSender == false && otherGSM == false && lost == false) {
 
     Serial.println("MSG");
     Serial.println(msg);
 
     delay(20);
 
-    sms.beginSMS(senderNumber);
+    sms.beginSMS(sender);
     sms.print("Got it. Get the next person to text."); // reply to sender
     sms.endSMS();
 
     delay(20); 
 
-    currentLED++; // increase LED count
-    bitSet(leds, LEDs[currentLED]);  // step through array
+    LEDon++; // increase LED count
+    bitSet(leds, LEDs[LEDon]);  // step through array
     updateShiftRegister();
     Serial.println("LED:");
-    Serial.println(currentLED);
+    Serial.println(LEDon);
 
     msgArray[i] = msg; // add message to array
 
     if (i == 0) {
-      strncpy(previousSender1, senderNumber, 20); // set current sender as previous
+      strncpy(pSndr1, sender, 13); // set current sender as previous
       Serial.println("Stored number");
-      Serial.println(previousSender1);
+      Serial.println(pSndr1);
     }
 
     else if (i == 1) {
-      strncpy(previousSender2, senderNumber, 20); // set current sender as previous
+      strncpy(pSndr2, sender, 13); // set current sender as previous
       Serial.println("Stored number");
-      Serial.println(previousSender2);
+      Serial.println(pSndr2);
     }
 
     else if (i == 2) {
-      strncpy(previousSender3, senderNumber, 20); // set current sender as previous
+      strncpy(pSndr3, sender, 13); // set current sender as previous
       Serial.println("Stored number");
-      Serial.println(previousSender3);
+      Serial.println(pSndr3);
     }
 
     else if (i == 3) {
-      strncpy(previousSender4, senderNumber, 20); // set current sender as previous
+      strncpy(pSndr4, sender, 13); // set current sender as previous
       Serial.println("Stored number");
-      Serial.println(previousSender4);
+      Serial.println(pSndr4);
     }
 
     i++;
@@ -192,56 +189,53 @@ void loop()
 
   }
 
-  else if (received == true && repeatSender == true && youLose == false) {
+  else if (received == true && pSender == true && lost == false) {
     Serial.println("REPEAT SENDER");
 
     delay(20); 
 
-    sms.beginSMS(senderNumber);
+    sms.beginSMS(sender);
     sms.print("You can't text twice in a row. Find a buddy to help you!");
     sms.endSMS(); 
 
     delay(20); 
 
     received = false;
-    repeatSender = false;
+    pSender = false;
 
   }
 
-  else if (received == true && fromOtherArduino == true && youLose == true) {
+  else if (received == true && otherGSM == true && lost == true) {
 
     Serial.println("ARDUINO");
     Serial.println(msg);
 
     if (msg != "PRINT") {
-
-      GSM2Array[x] = msg; // add message to array
-      Serial.println(GSM2Array[x]);
-      x++;
-
-      delay(50);
-
-    }
-    
-    else if (msg == "PRINT") {
-
-      printGSM2Msgs = true;
-
-    }
-
+      
+        pSetup();
+        tprint(msg); // print array of messages from other Arduino
+        Serial.println(msg);
+         printReset();
+         delay(50);
+         
+      } else {
+        
+         reset = true;
+      }
+          
     received = false;
-    fromOtherArduino = false;
+    otherGSM = false;
 
-  }
+    }
 
-  if (currentLED == 2 && youLose == false) {
-    // if (currentLED == 5) {
+  if (LEDon == 2 && lost == false) {
+    // if (LEDon == 5) {
 
     printMsgs = true;
     Serial.println("WIN");
 
     // need to text the other GSM shield to reset
-    sms.beginSMS(GSMshield2);
+    sms.beginSMS(GSM2);
     sms.print("RESET");
     sms.endSMS();
   } 
@@ -264,40 +258,15 @@ void loop()
 
   }
 
-  if (printGSM2Msgs == true) {
-
-    Serial.println("PRINT LIST"); 
-
-    pSetup();
-    for (int n=0; n<5; n++) { // stepping through msg array, need to consider size
-      if (GSM2Array[n] != "PRINT") { 
-        tprint(GSM2Array[n]); // print array of messages from other Arduino
-        Serial.println(GSM2Array[n]);
-      }
-    }
-
-    printReset();
-
-    printGSM2Msgs = false; 
-
-    GSM2Array[5] = ("","","","","");
-
-    reset = true;
-
-  }
-  
-
-
   if (reset == true) {
 
     i = 0;
-    x = 0;
 
-    memset(senderNumber,'\0',20);
-    memset(previousSender1,'\0',20);
-    memset(previousSender2,'\0',20);
-    memset(previousSender3,'\0',20);
-    memset(previousSender4,'\0',20);
+    memset(sender,'\0',13);
+    memset(pSndr1,'\0',13);
+    memset(pSndr2,'\0',13);
+    memset(pSndr3,'\0',13);
+    memset(pSndr4,'\0',13);
 
     msgArray[5] = ("","","","","");
 
@@ -306,16 +275,15 @@ void loop()
       updateShiftRegister();
     }
 
-    currentLED = 0;
+    LEDon = 0;
 
     Serial.println("EVERYTHING RESET");
 
     reset = false;
-    youLose = false;
-//    fromOtherArduino = false;
-    repeatSender = false;
+    lost = false;
+//    otherGSM = false;
+    pSender = false;
 //    printMsgs = false;
-//    printGSM2Msgs = false;
     processing = false;
 //    received = false;
     
