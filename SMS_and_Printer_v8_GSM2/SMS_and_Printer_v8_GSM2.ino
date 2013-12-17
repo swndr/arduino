@@ -86,10 +86,10 @@ void loop()
     // Get remote number
     sms.remoteNumber(senderNumber, 20);
     Serial.println(senderNumber);
-    
+
     if (strcmp(senderNumber, GSMshield1)  == 0) {
-    fromOtherArduino = true;
-     reset = true;
+      fromOtherArduino = true;
+      reset = true;
     }
 
     else if (strcmp(senderNumber, previousSender1)  == 0 || strcmp(senderNumber, previousSender2)  == 0 || strcmp(senderNumber, previousSender3)  == 0 || strcmp(senderNumber, previousSender4)  == 0) {
@@ -117,7 +117,7 @@ void loop()
   }
 
 
-    if (received == true && fromOtherArduino == false && repeatSender == false && reset == false) {
+  if (received == true && fromOtherArduino == false && repeatSender == false && reset == false) {
 
     Serial.println("MSG STRING");
     Serial.println(msg);
@@ -196,12 +196,12 @@ void loop()
     Serial.println("SEND TO PRINT LIST"); 
 
     for (int n=0; n<5; n++) { // stepping through msg array, need to consider size
-     // if (msgArray[n] != "") {
-        sms.beginSMS(GSMshield1);
-        sms.print(msgArray[n]); // reply to sender
-        sms.endSMS();
-        delay(200);
-     // }
+      // if (msgArray[n] != "") {
+      sms.beginSMS(GSMshield1);
+      sms.print(msgArray[n]); // reply to sender
+      sms.endSMS();
+      delay(200);
+      // }
     }
 
     sms.beginSMS(GSMshield1);
@@ -233,11 +233,11 @@ void loop()
 
   if (reset == true) {
 
-    senderNumber[20];
-    previousSender1[20];
-    previousSender2[20];
-    previousSender3[20];
-    previousSender4[20];
+    char senderNumber[20] = "+00000000000";
+    char previousSender1[20] = "+00000000000";
+    char previousSender2[20] = "+00000000000";
+    char previousSender3[20] = "+00000000000";
+    char previousSender4[20] = "+00000000000";
 
     msgArray[5] = "";
 
@@ -249,13 +249,19 @@ void loop()
     }
 
     Serial.println("EVERYTHING RESET");
-    
+
+    received = false;
+    fromOtherArduino = false;
+    repeatSender = false;
+    printMsgs = false; 
+    processing = false;
     received = false;
     reset = false;
 
   }
 
 }
+
 
 
 

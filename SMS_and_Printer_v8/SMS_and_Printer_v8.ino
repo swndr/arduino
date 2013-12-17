@@ -215,8 +215,8 @@ void loop()
 
     }
 
-      received = false;
-      fromOtherArduino = false;
+    received = false;
+    fromOtherArduino = false;
 
   }
 
@@ -274,11 +274,11 @@ void loop()
 
   if (reset == true) {
 
-    senderNumber[20];
-    previousSender1[20];
-    previousSender2[20];
-    previousSender3[20];
-    previousSender4[20];
+    char senderNumber[20] = "+00000000000";
+    char previousSender1[20] = "+00000000000";
+    char previousSender2[20] = "+00000000000";
+    char previousSender3[20] = "+00000000000";
+    char previousSender4[20] = "+00000000000";
 
     msgArray[5] = "";
 
@@ -293,9 +293,17 @@ void loop()
 
     reset = false;
     youLose = false;
+    fromOtherArduino = false;
+    repeatSender = false;
+    printMsgs = false;
+    printGSM2Msgs = false;
+    processing = false;
+    received = false;
+
 
   }
 }
+
 
 
 
