@@ -207,25 +207,6 @@ void loop()
     sms.endSMS();
 
     delay(200);
-
-    char senderNumber[20];
-    char previousSender1[20];
-    char previousSender2[20];
-    char previousSender3[20];
-    char previousSender4[20];
-
-    msgArray[5] = "";
-
-    currentLED = 0;
-
-    for (int n=5; n>0; n--) {
-      currentLED = n;
-      digitalWrite(LEDs[currentLED], LOW);   
-    }
-
-    Serial.println("EVERYTHING RESET");
-
-    printMsgs = false;
     
     reset = true;
 
