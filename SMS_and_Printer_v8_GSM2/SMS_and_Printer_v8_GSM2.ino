@@ -195,13 +195,11 @@ void loop()
 
     Serial.println("SEND TO PRINT LIST"); 
 
-    for (int n=0; n<5; n++) { // stepping through msg array, need to consider size
-      // if (msgArray[n] != "") {
+    for (int n=0; n<1; n++) { // stepping through msg array, need to consider size // BACK TO 5
       sms.beginSMS(GSMshield1);
       sms.print(msgArray[n]); // reply to sender
       sms.endSMS();
       delay(200);
-      // }
     }
 
     sms.beginSMS(GSMshield1);
