@@ -122,9 +122,9 @@ void tprint (String printsms) {
 
 
     printer.feed(10); // needs feed
+    
   /*  printer.printBarcode("YEAH", CODE39); // max 4?
     printer.setBarcodeHeight(100);
-
     //  printer.feed(1);*/
   }
 }
