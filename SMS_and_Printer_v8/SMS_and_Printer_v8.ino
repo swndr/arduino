@@ -274,11 +274,11 @@ void loop()
 
   if (reset == true) {
 
-    char senderNumber[20];
-    char previousSender1[20];
-    char previousSender2[20];
-    char previousSender3[20];
-    char previousSender4[20];
+    senderNumber[20];
+    previousSender1[20];
+    previousSender2[20];
+    previousSender3[20];
+    previousSender4[20];
 
     msgArray[5] = "";
 

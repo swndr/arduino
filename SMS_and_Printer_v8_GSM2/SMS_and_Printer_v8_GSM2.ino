@@ -26,6 +26,7 @@ int LEDs[6] = {
   0,4,5,6,11,12}; // array for the LEDs
 int currentLED = 0; // to indicate current LED
 
+boolean fromOtherArduino = false;
 boolean repeatSender = false;
 
 boolean printMsgs = false; // to stop printing until winner wins
@@ -85,8 +86,12 @@ void loop()
     // Get remote number
     sms.remoteNumber(senderNumber, 20);
     Serial.println(senderNumber);
+    
+    if (strcmp(senderNumber, GSMshield1)  == 0) {
+    fromOtherArduino = true;
+    }
 
-    if (strcmp(senderNumber, previousSender1)  == 0 || strcmp(senderNumber, previousSender2)  == 0 || strcmp(senderNumber, previousSender3)  == 0 || strcmp(senderNumber, previousSender4)  == 0) {
+    else if (strcmp(senderNumber, previousSender1)  == 0 || strcmp(senderNumber, previousSender2)  == 0 || strcmp(senderNumber, previousSender3)  == 0 || strcmp(senderNumber, previousSender4)  == 0) {
       repeatSender = true;
     }
 
@@ -117,7 +122,7 @@ void loop()
 
     }
 
-  else if (received == true && repeatSender == false && reset == false) {
+  else if (received == true && fromOtherArduino = false && repeatSender == false && reset == false) {
 
     Serial.println("MSG STRING");
     Serial.println(msg);
@@ -167,7 +172,7 @@ void loop()
 
   }
 
-  else if (received == true && repeatSender == true && reset == false) {
+  else if (received == true && repeatSender == true && fromOtherArduino = false && reset == false) {
     Serial.println("REPEAT SENDER");
 
     delay(20); 
@@ -233,11 +238,11 @@ void loop()
 
   if (reset == true) {
 
-    char senderNumber[20];
-    char previousSender1[20];
-    char previousSender2[20];
-    char previousSender3[20];
-    char previousSender4[20];
+    senderNumber[20];
+    previousSender1[20];
+    previousSender2[20];
+    previousSender3[20];
+    previousSender4[20];
 
     msgArray[5] = "";
 
