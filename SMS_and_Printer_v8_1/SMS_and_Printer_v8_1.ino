@@ -8,6 +8,7 @@ GSM gsmAccess;
 GSM_SMS sms;
 
 char GSMshield2[20] = "+19292503120";
+// char GSMshield2[20] = "+13106942711";
 
 // Array to hold the number a SMS is retreived from
 char senderNumber[20];
@@ -17,7 +18,6 @@ char previousSender3[20];
 char previousSender4[20];
 
 String msgArray[5]; // for all the messages needed to win
-String GSM2Array[5]; // to receive from other Arduino
 
 String msg; // build message
 
@@ -75,7 +75,7 @@ void setup()
 
 void loop() 
 {
-  
+
   char c;
 
   // If there are any SMSs available()  
@@ -194,24 +194,21 @@ void loop()
 
   else if (received == true && fromOtherArduino == true && youLose == true) {
 
-    Serial.println("ARDUINO MSG STRING");
+    Serial.println("ARDUINO");
     Serial.println(msg);
 
     if (msg != "PRINT") {
 
-      GSM2Array[x] = msg; // add message to array
-      Serial.println("Added to array");
-      Serial.println(GSM2Array[x]);
-      x++;
-
+      pSetup();
+      tprint(msg); // print array of messages from other Arduino
+      Serial.println(msg);
+      printReset();
       delay(50);
 
-    }
+    } 
+    else {
 
-    else if (msg == "PRINT") {
-
-      printGSM2Msgs = true;
-
+      reset = true;
     }
 
     received = false;
@@ -248,33 +245,11 @@ void loop()
 
   }
 
-  if (printGSM2Msgs == true) {
+  if (reset == true) {
 
-    Serial.println("PRINT LIST"); 
-
-    pSetup();
-    for (int n=0; n<5; n++) { // stepping through msg array, need to consider size
-      if (GSM2Array[n] != "PRINT") { 
-        tprint(GSM2Array[n]); // print array of messages from other Arduino
-        Serial.println(GSM2Array[n]);
-      }
-    }
-
-    printReset();
-
-    printGSM2Msgs = false; 
-
-    GSM2Array[5] = ("","","","","");
-
-    reset = true;
-
-  }
-  
-      if (reset == true) {
-    
     i = 0;
     x = 0;
-    
+
     memset(senderNumber,'\0',20);
     memset(previousSender1,'\0',20);
     memset(previousSender2,'\0',20);
@@ -287,7 +262,7 @@ void loop()
       currentLED = n;
       digitalWrite(LEDs[currentLED], LOW);   
     }
-    
+
     currentLED = 0;
 
     Serial.println("EVERYTHING RESET");
@@ -297,7 +272,6 @@ void loop()
     fromOtherArduino = false;
     repeatSender = false;
     printMsgs = false;
-    printGSM2Msgs = false;
     processing = false;
     received = false;
 
@@ -305,6 +279,7 @@ void loop()
   }
 
 }
+
 
 
 
